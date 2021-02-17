@@ -103,13 +103,11 @@ fun! TodoExpression(...) abort
 endfun
 
 fun! Todo(options, extra_args) abort
-  " let l:options = get(a:, 1, { 'bang': '', 'add': 0, 'loc': 0, 'scope': 'project', 'from_search': 0 })
-  " let l:extra_args = get(a:, 2, '')
   let l:options = a:options
   let l:extra_args = a:extra_args
   let l:grep_expr = ((l:options.loc) ? 'l': '').'grep'.((l:options.add) ? 'add' : ''). l:options.bang
   let l:todo_expr = TodoExpression({ 'engine': 'pcre2' })
-  let l:ack_args = "'" . l:todo_expr . "' " . l:extra_args
+  let l:ack_args = shellescape(l:todo_expr) . ' ' . l:extra_args
   if l:options.from_search
     call ack#AckFromSearch(l:grep_expr, l:ack_args)
   elseif l:options.scope == 'window'
