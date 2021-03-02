@@ -2,6 +2,17 @@
 "TODO: put this plugin into its own repository and publish it
 let g:todo_prefix = ['#', '//', '/*', '"', '!'] " list of line comment start markers
                                                 "TODO: make these language-specific
+
+"FIXME: hierarchical keyword spec so one keyword can belong to multiple groups
+" groups: {
+"   now: ['fixme', 'todo', 'fix', ],
+"   fixme: ['fixme', 'fix', ],
+" }
+" keywords: {
+"   fixme: 'FIXME',
+"   todo: 'TODO',
+"   fix: 'FIX',
+" }
 " indicates an ordinary note to the reader, usually not worth checking
 let g:todo_note_keyword = [
 \ 'DEPRECATED',
@@ -94,11 +105,12 @@ fun! TodoKeywords(...) abort
 endfun
 
 fun! TodoExpression(...) abort
+  "FIXME: use re2, not pcre2
   let l:options = get(a:, 1, { 'engine': 'pcre2' })
   if l:options.engine == 'pcre2'
-    return '^(?:\s|#|\/\/|\/\*|"|!)+(?:'.join(TodoKeywords(), '|').')[[:punct:]]*(?:\(.*\))?(?:[[:punct:]]|\s|$)'
+    return '^(?:\s|#|//|/\*|"|!)+(?:'.join(TodoKeywords(l:options), '|').')[[:punct:]]*(?:\(.*\))?(?:[[:punct:]]|\s|$)'
   else
-    return '\v\C^%(\s|#|\/\/|\/\*|"|!)+%('.join(TodoKeywords(), '|').')[:punct:]*%(\(.*\))?%([:punct:]|\s|$)'
+    return '\v\C^%(\s|#|\/\/|\/\*|"|!)+%('.join(TodoKeywords(l:options), '|').')[:punct:]*%(\(.*\))?%([:punct:]|\s|$)'
   endif
 endfun
 
@@ -122,8 +134,6 @@ command! -bang -nargs=* -complete=file TodoAdd        call Todo({ 'bang': '<bang
 command! -bang -nargs=* -complete=file TodoFromSearch call Todo({ 'bang': '<bang>', 'add': 0, 'loc': 0, 'scope': 'project', 'from_search': 1 }, <q-args>)
 command! -bang -nargs=* -complete=file LTodo          call Todo({ 'bang': '<bang>', 'add': 0, 'loc': 1, 'scope': 'project', 'from_search': 0 }, <q-args>)
 command! -bang -nargs=* -complete=file LTodoAdd       call Todo({ 'bang': '<bang>', 'add': 1, 'loc': 1, 'scope': 'project', 'from_search': 0 }, <q-args>)
-"Removed: doesn't work with ag (and already equivalent to Todo %)
-" command! -bang -nargs=* -complete=file TodoFile       call Todo({ 'bang': '<bang>', 'add': 0, 'loc': 0, 'scope':    'file', 'from_search': 0 }, <q-args>)
 command! -bang -nargs=*                TodoWindow     call Todo({ 'bang': '<bang>', 'add': 0, 'loc': 0, 'scope':  'window', 'from_search': 0 }, <q-args>)
 command! -bang -nargs=*                LTodoWindow    call Todo({ 'bang': '<bang>', 'add': 0, 'loc': 1, 'scope':  'window', 'from_search': 0 }, <q-args>)
 "TODO: add a custom quickfix syntax and commands/mappings to make the search results easier to filter/jump/etc.
