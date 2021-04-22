@@ -1,5 +1,6 @@
+"TODO integrate with syntastic to automatically update the loclist with todos from the current file
+
 " populate the location list with the TODO comments from the current buffer
-"TODO: put this plugin into its own repository and publish it
 let g:todo_prefix = ['#', '//', '/*', '"', '!'] " list of line comment start markers
                                                 "TODO: make these language-specific
 
