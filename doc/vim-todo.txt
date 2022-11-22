@@ -1,0 +1,29 @@
+*vim-todo.txt* Utilities for highlighting TODO strings
+Version: 1.0
+Author : Ben Mundt
+GitHub : https://github.com/bmundt6/vim-todo
+==============================================================================
+CONTENTS					*vim-todo-contents*
+
+Commands				    |vim-todo-commands|
+
+==============================================================================
+COMMANDS						*vim-todo-commands*
+
+*:Todo*		                Search for default TODOs in the current project.
+*:TodoAdd*	        	Add default TODOs from the current project to
+                                the quickfix list.
+*:TodoFromSearch* {pattern}	Search for default TODOs in a grep {pattern} result.
+*:TodoWindow*                     Search for default TODOs in all open buffers in the
+                                current window.
+*:TodoWindowAll*                  Search for all TODOs in all open buffers in the
+                                current window.
+*:LTodo*		        Search for default TODOs in the current project
+                                (results in loclist).
+*:LTodoAdd*	        	Add default TODOs from the current project to
+                                the loclist.
+*:LTodoWindow*                    Search for default TODOs in all open buffers in the
+                                current window (results in loclist).
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:

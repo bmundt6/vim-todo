@@ -119,7 +119,11 @@ fun! Todo(options, extra_args) abort
   let l:options = a:options
   let l:extra_args = a:extra_args
   let l:grep_expr = ((l:options.loc) ? 'l': '').'grep'.((l:options.add) ? 'add' : ''). l:options.bang
-  let l:todo_expr = TodoExpression({ 'engine': 'pcre2' })
+  let l:todo_expr_opts = { 'engine': 'pcre2' }
+  if has_key(l:options, 'todo_expr_opts')
+    let l:todo_expr_opts = extend(l:todo_expr_opts, l:options.todo_expr_opts)
+  endif
+  let l:todo_expr = TodoExpression(l:todo_expr_opts)
   let l:ack_args = shellescape(l:todo_expr) . ' ' . l:extra_args
   if l:options.from_search
     call ack#AckFromSearch(l:grep_expr, l:ack_args)
@@ -136,6 +140,7 @@ command! -bang -nargs=* -complete=file TodoFromSearch call Todo({ 'bang': '<bang
 command! -bang -nargs=* -complete=file LTodo          call Todo({ 'bang': '<bang>', 'add': 0, 'loc': 1, 'scope': 'project', 'from_search': 0 }, <q-args>)
 command! -bang -nargs=* -complete=file LTodoAdd       call Todo({ 'bang': '<bang>', 'add': 1, 'loc': 1, 'scope': 'project', 'from_search': 0 }, <q-args>)
 command! -bang -nargs=*                TodoWindow     call Todo({ 'bang': '<bang>', 'add': 0, 'loc': 0, 'scope':  'window', 'from_search': 0 }, <q-args>)
+command! -bang -nargs=*                TodoWindowAll  call Todo({ 'bang': '<bang>', 'add': 0, 'loc': 0, 'scope':  'window', 'from_search': 0, 'todo_expr_opts': { 'all': 1 } }, <q-args>)
 command! -bang -nargs=*                LTodoWindow    call Todo({ 'bang': '<bang>', 'add': 0, 'loc': 1, 'scope':  'window', 'from_search': 0 }, <q-args>)
 "TODO: add a custom quickfix syntax and commands/mappings to make the search results easier to filter/jump/etc.
 "      (compare with https://github.com/Dimercel/todo-vim)
